@@ -9,6 +9,7 @@ public class Gravity : MonoBehaviour
 
     GravityUpdater findGravity;
 
+
     private void Start()
     {
         findGravity = GameObject.Find("GravityUpdater").GetComponent<GravityUpdater>();

@@ -28,7 +28,6 @@ public class EnemySpawner : MonoBehaviour
     const int stages = 5;
     int stageIndex = 0; //stage index determines how many enemies spawn and rate
     int timePerStage = 8;
-
     float timeElapsed = 0f;
 
     //Variables for setting up spawn points
@@ -37,6 +36,16 @@ public class EnemySpawner : MonoBehaviour
     float spawnPointX;
     float increment;
 
+    //This array holds the chance that something will spawn
+    /*
+     * 75% chance it is an asteroid (store value of 0)
+     * 20% chance it is a spaceship (store a value of 1)
+     * 5% chance it is another energy ball (store a value of 2)
+     */
+    int[] spawnChances;
+    int asteroidChance;
+    int spaceshipChance;
+    int energyBallChance;
 
 
     // Start is called before the first frame update
@@ -48,6 +57,7 @@ public class EnemySpawner : MonoBehaviour
         //Set up evenly spaced areas to spawn asteroids
         SetUpSpawnPoints();
 
+        //Stages increase how many items spawn (not implemented)
         secondsPerStage = new int[stages];
         int k = timePerStage;
         for(int i = 0; i < stages; i++)
@@ -56,7 +66,13 @@ public class EnemySpawner : MonoBehaviour
             k += timePerStage;
         }
 
-       
+        asteroidChance = 75;
+        spaceshipChance = 20;
+        energyBallChance = 5;
+        spawnChances = new int[100];
+
+        SetUpSpawnChances();
+
         //polish: delete the first and last spawnpoints so that mostly the middle is used.
         StartCoroutine(SpawnItem());
     }
@@ -65,7 +81,7 @@ public class EnemySpawner : MonoBehaviour
     void Update()
     {
         timeElapsed += Time.deltaTime;
-        if (stageIndex < stages && timeElapsed > secondsPerStage[stageIndex]) //greater than 10 seconds
+        if (stageIndex < stages && timeElapsed > secondsPerStage[stageIndex])
         {
             stageIndex++;
         }
@@ -105,6 +121,29 @@ public class EnemySpawner : MonoBehaviour
 
     }
 
+    void SetUpSpawnChances()
+    {
+
+        for (int i = 0; i < 100; i++)
+        {
+            if (i < asteroidChance)
+            {
+                spawnChances[i] = 0;
+            }
+            else
+            {
+                if (i < asteroidChance + spaceshipChance)
+                {
+                    spawnChances[i] = 1;
+                }
+                else
+                {
+                    spawnChances[i] = 2;
+                }
+            }
+        }
+    }
+
     IEnumerator SpawnItem()
     {
         Vector3 location;
@@ -114,23 +153,26 @@ public class EnemySpawner : MonoBehaviour
             int r = (int)Mathf.Round(Random.Range(0f, 2f));
 
             location = new Vector3(spawnPointX, randomY(), 0f);
-            SpawnAsteroid(location);
+            SpawnByChance(location);
 
-            if(r > 1)
+
+
+            if (r > 1)
             {
 
                 newLocation = new Vector3(spawnPointX, randomY(), 0f);
                 if(newLocation.y - location.y < increment * 2)
                 {
                     int i = 1;
-                    while(i < 4 && (newLocation.y - location.y < increment * 2))
+                    //try up to 4 times not to spawn near the same place
+                    while (i < 4 && (newLocation.y - location.y < increment * 2)) 
                     {
                         newLocation.y = randomY();
                         i++;
                     }
                     
                 }
-                SpawnAsteroid(newLocation);
+                SpawnByChance(newLocation);
             }
 
 
@@ -150,18 +192,47 @@ public class EnemySpawner : MonoBehaviour
             i = spawnPointY.Count - 1;
         }
         float y = spawnPointY[i];
-        Debug.Log(y);
         return y;
+    }
+
+    void SpawnByChance(Vector3 location)
+    {
+        int i = (int)Mathf.Round(Random.Range(0f, spawnChances.Length));
+        if(i >= spawnChances.Length)
+        {
+            i = spawnChances[spawnChances.Length - 1];
+        }
+
+        switch (spawnChances[i])
+        {
+            case 0:
+                SpawnAsteroid(location);
+                break;
+            case 1:
+                SpawnSpaceship(location);
+                break;
+            case 2:
+                spawnEnergyBall(location);
+                break;
+            default:
+                SpawnAsteroid(location);
+                break;
+        }
+
     }
     void SpawnAsteroid(Vector3 location)
     {
-
         Instantiate(AsteroidPrefab, location, Quaternion.identity, this.transform);
-
     }
 
     void SpawnSpaceship(Vector3 location)
     {
+        //In future stages, spaceships may be changed to have higher speed
+        Instantiate(SpaceshipPrefab, location, Quaternion.identity, this.transform);
+    }
 
+    void spawnEnergyBall(Vector3 location)
+    {
+        Instantiate(EnergyBall, location, Quaternion.identity, this.transform);
     }
 }
