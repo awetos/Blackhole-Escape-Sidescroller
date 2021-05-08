@@ -25,6 +25,14 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField]
     int[] secondsPerStage;
 
+    /*
+     * secondsPerStage[0] = 8
+     * secondsPerStage[1] = 16
+     * secondsPerStage[2] = 24
+     * secondsPerStage[3] = 32
+     * secondsPerStage[4] = 40
+     * When stageIndex is more than 40 seconds, stageIndex = 5
+     */
     const int stages = 5;
     int stageIndex = 0; //stage index determines how many enemies spawn and rate
     int timePerStage = 8;
@@ -75,15 +83,16 @@ public class EnemySpawner : MonoBehaviour
 
         //polish: delete the first and last spawnpoints so that mostly the middle is used.
         StartCoroutine(SpawnItem());
+        StartCoroutine(SpawnEnergyBallsRegularly());
     }
 
     // Update is called once per frame
     void Update()
     {
         timeElapsed += Time.deltaTime;
-        if (stageIndex < stages && timeElapsed > secondsPerStage[stageIndex])
+        if (stageIndex < stages && timeElapsed > secondsPerStage[stageIndex]) //Stages: 0, 1, 2, 3, 4
         {
-            stageIndex++;
+            stageIndex++; // ends at stage 5
         }
     }
 
@@ -120,7 +129,6 @@ public class EnemySpawner : MonoBehaviour
         }
 
     }
-
     void SetUpSpawnChances()
     {
 
@@ -155,8 +163,6 @@ public class EnemySpawner : MonoBehaviour
             location = new Vector3(spawnPointX, randomY(), 0f);
             SpawnByChance(location);
 
-
-
             if (r > 1)
             {
 
@@ -176,9 +182,19 @@ public class EnemySpawner : MonoBehaviour
             }
 
 
-            yield return new WaitForSeconds(2f / (stageIndex + 1));
+            yield return new WaitForSeconds(4f / (stageIndex + 1));
         }
         
+    }
+
+    IEnumerator SpawnEnergyBallsRegularly()
+    {
+        while (true)
+        {
+            Vector3 location = new Vector3(spawnPointX, randomY(), 0f);
+            spawnEnergyBall(location);
+            yield return new WaitForSeconds(3f);
+        }
     }
     float randomY()
     {
@@ -228,7 +244,9 @@ public class EnemySpawner : MonoBehaviour
     void SpawnSpaceship(Vector3 location)
     {
         //In future stages, spaceships may be changed to have higher speed
-        Instantiate(SpaceshipPrefab, location, Quaternion.identity, this.transform);
+        EnemyShip newShip = Instantiate(SpaceshipPrefab, location, Quaternion.identity, this.transform).GetComponent<EnemyShip>();
+        float newShipSpeed = 0.1f * stageIndex;
+        newShip.IncreaseSpeed(newShipSpeed);
     }
 
     void spawnEnergyBall(Vector3 location)

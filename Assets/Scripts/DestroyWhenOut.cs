@@ -29,4 +29,5 @@ public class DestroyWhenOut : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
 }

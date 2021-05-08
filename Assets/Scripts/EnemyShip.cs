@@ -18,9 +18,11 @@ public class EnemyShip : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         transform.Translate(destination * Time.deltaTime * enemySpeed);
-        
+    }
 
+    public void IncreaseSpeed(float f)
+    {
+        enemySpeed += f;
     }
 }

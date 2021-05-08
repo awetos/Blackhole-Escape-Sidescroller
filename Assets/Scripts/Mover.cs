@@ -34,7 +34,7 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
         if (Input.GetAxis("Horizontal") < 0) //go left
         {
             

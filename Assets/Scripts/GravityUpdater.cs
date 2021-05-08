@@ -26,7 +26,7 @@ public class GravityUpdater : MonoBehaviour
         {
             if(gravity > 10)
             {
-                gravity += 5f;
+                gravity += 3f;
             }
             else
             {
