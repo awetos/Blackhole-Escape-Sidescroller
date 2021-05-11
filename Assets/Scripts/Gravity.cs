@@ -6,6 +6,11 @@ public class Gravity : MonoBehaviour
 {
     [SerializeField]
     float gravity;
+    float slowedGravity;
+
+    bool gravityCoolDown;
+    float gravityTimer;
+    const float cooldownAmount = 5f;
 
     [SerializeField]
     bool isPlayer = false;
@@ -13,9 +18,19 @@ public class Gravity : MonoBehaviour
 
     GravityUpdater findGravity;
 
+    private void OnEnable()
+    {
+        CollisionEvents.OnPowerupEaten += turnGravityOff;
+    }
+
+    private void OnDisable()
+    {
+        CollisionEvents.OnPowerupEaten -= turnGravityOff;
+    }
 
     private void Start()
     {
+        gravityTimer = 0f;
         findGravity = GameObject.Find("GravityUpdater").GetComponent<GravityUpdater>();
 
         turnGravityOn();
@@ -23,7 +38,6 @@ public class Gravity : MonoBehaviour
         if (this.gameObject.tag == "Player")
         {
             isPlayer = true;
-            StartCoroutine(ResumeGravity());
         }
 
         gravity = findGravity.getGravity();
@@ -32,13 +46,25 @@ public class Gravity : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        gravityTimer += Time.deltaTime;
+        if (gravityTimer > cooldownAmount)
+        {
+            isGravityOn = true;
+        }
         if (isPlayer)
         {
             if(isGravityOn == true) //Energyballs can cancel gravity
             {
                 transform.Translate(Vector3.left * Time.deltaTime * gravity);
+                gravity = findGravity.getGravity();
             }
-            gravity = findGravity.getGravity();
+            else
+            {
+                
+                transform.Translate(Vector3.left * Time.deltaTime * slowedGravity);
+
+            }
+
             //turn gravity back on in 5 seconds
         }
         else
@@ -48,18 +74,6 @@ public class Gravity : MonoBehaviour
         }
     }
 
-    IEnumerator ResumeGravity()
-    {
-        while (true)
-        {
-            if (isGravityOn == false)
-            {
-                turnGravityOn();
-            }
-            yield return new WaitForSeconds(5f);
-        }
-        //Every 5 seconds, if gravity is not turned on, turn it back on
-    }
 
     public void turnGravityOn()
     {
@@ -68,6 +82,8 @@ public class Gravity : MonoBehaviour
 
     public void turnGravityOff()
     {
+        gravityTimer = 0f;
+        slowedGravity = 0.25f * gravity; //this can be changed later to be more dynamic
         isGravityOn = false;
     }
 }

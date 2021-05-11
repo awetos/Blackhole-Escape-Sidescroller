@@ -12,12 +12,21 @@ public class EnemyShip : MonoBehaviour
     void Start()
     {
         playerLocation = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>().position;
-        destination = playerLocation - transform.position;
+        if(playerLocation != null)
+        {
+
+            destination = playerLocation - transform.position;
+        }
+        else
+        {
+            destination = Vector3.right;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+
         transform.Translate(destination * Time.deltaTime * enemySpeed);
     }
 

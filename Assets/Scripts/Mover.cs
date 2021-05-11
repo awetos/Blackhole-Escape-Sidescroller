@@ -10,12 +10,26 @@ public class Mover : MonoBehaviour
     [SerializeField]
     Camera mainCamera;
 
+    
+
+    public delegate void BlackHoleDeath();
+    public static event BlackHoleDeath OnBlackHoleDeath;
+
+    bool canMove;
+
+    ParticleSystem fireEffect;
+    bool isMoving;
     Vector3 middleTop, middleBottom, middleTopBoundary, middleBottomBoundary;
     Vector3 leftTop, leftBottom, leftTopBoundary, leftBottomBoundary;
     Vector3 startPosition;
     // Start is called before the first frame update
     private void Start()
     {
+
+        canMove = true;
+        isMoving = false;
+        fireEffect = GameObject.Find("Magic fire pro yellow").GetComponent<ParticleSystem>();
+
         middleTop = new Vector3(0.5f,1f,0f);
         middleBottom = new Vector3(0.5f, 0f, 0f);
         leftTop = new Vector3(0f,1f,0f);
@@ -34,10 +48,41 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (canMove)
+        {
+
+            Movement();
+
+            if (Input.anyKey)
+            {
+                if(isMoving == false)//start movement
+                {
+                    fireEffect.Play();
+                    isMoving = true;
+                }
+            }
+            else
+            {
+                fireEffect.Stop();
+                isMoving = false;
+            }
+
+        }
+
+
+        if (transform.position.x < leftTopBoundary.x)
+        {
+            OnBlackHoleDeath();
+            canMove = false;
+        }
+       
+
+    }
+    void Movement()
+    {
         if (Input.GetAxis("Horizontal") < 0) //go left
         {
-            
+
 
             if (Input.GetAxis("Vertical") < 0) //go down
             {
@@ -59,7 +104,7 @@ public class Mover : MonoBehaviour
         }
         if (Input.GetAxis("Horizontal") > 0) //go right
         {
-            
+
 
             if (Input.GetAxis("Vertical") < 0) //go down
             {
@@ -83,7 +128,7 @@ public class Mover : MonoBehaviour
 
         if (Input.GetAxis("Vertical") < 0) //go down
         {
-            
+
 
             if (Input.GetAxis("Horizontal") < 0) //go left
             {
@@ -121,9 +166,7 @@ public class Mover : MonoBehaviour
             }
             ClampToScreen();
         }
-        
     }
-
     void ClampToScreen()
     {
         //Do not go above or below the screen
@@ -147,4 +190,6 @@ public class Mover : MonoBehaviour
             transform.position = relocateVector;
         }
     }
+    
+
 }

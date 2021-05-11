@@ -243,10 +243,11 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnSpaceship(Vector3 location)
     {
+        Instantiate(SpaceshipPrefab, location, Quaternion.identity, this.transform);
         //In future stages, spaceships may be changed to have higher speed
-        EnemyShip newShip = Instantiate(SpaceshipPrefab, location, Quaternion.identity, this.transform).GetComponent<EnemyShip>();
-        float newShipSpeed = 0.1f * stageIndex;
-        newShip.IncreaseSpeed(newShipSpeed);
+        //EnemyShip newShip = Instantiate(SpaceshipPrefab, location, Quaternion.identity, this.transform).GetComponent<EnemyShip>();
+        // float newShipSpeed = 0.1f * stageIndex;
+        // newShip.IncreaseSpeed(newShipSpeed);
     }
 
     void spawnEnergyBall(Vector3 location)
