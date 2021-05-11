@@ -56,8 +56,9 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Animations\RotateBall.cs" />
     <Compile Include="Assets\Scripts\DestroyWhenOut.cs" />
+    <Compile Include="Assets\Scripts\RandomizeAsteroid.cs" />
+    <Compile Include="Assets\Scripts\GUI Scripts\StartGameButton.cs" />
     <Compile Include="Assets\Scripts\CollisionEvents.cs" />
     <Compile Include="Assets\Scripts\EnergyBallEventHandler.cs" />
     <Compile Include="Assets\Scripts\GUI Scripts\HealthText.cs" />
@@ -70,11 +71,10 @@
     <Compile Include="Assets\Scripts\GUI Scripts\EnergyText.cs" />
     <Compile Include="Assets\Scripts\WinLose.cs" />
     <Compile Include="Assets\Scripts\Gravity.cs" />
-    <Compile Include="Assets\Scripts\GravityUpdater.cs" />
-    <Compile Include="Assets\Scripts\RandomizeAsteroid.cs" />
-    <Compile Include="Assets\Scripts\GUI Scripts\PauseButton.cs" />
-    <Compile Include="Assets\Scripts\GUI Scripts\StartGameButton.cs" />
     <Compile Include="Assets\Scripts\GUI Scripts\ReturnToMenuButton.cs" />
+    <Compile Include="Assets\Scripts\GravityUpdater.cs" />
+    <Compile Include="Assets\Scripts\GUI Scripts\PauseButton.cs" />
+    <Compile Include="Assets\Scripts\GUI Scripts\QuitGameButton.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\Assets\Hovl Studio\Procedural fire\Shaders\FireSphere.shader" />

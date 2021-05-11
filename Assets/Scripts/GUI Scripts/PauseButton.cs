@@ -6,6 +6,7 @@ public class PauseButton : MonoBehaviour
 {
     bool isPaused;
     GameObject returnButton;
+    GameObject quitButton;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +14,10 @@ public class PauseButton : MonoBehaviour
         returnButton = GameObject.Find("ReturnButton");
         returnButton.transform.SetParent(this.transform);
         returnButton.SetActive(false);
+
+        quitButton = GameObject.Find("Quit Game");
+        quitButton.transform.SetParent(this.transform);
+        quitButton.SetActive(false);
     }
 
     // Update is called once per frame
@@ -28,6 +33,7 @@ public class PauseButton : MonoBehaviour
             
             Time.timeScale = 0;
             returnButton.SetActive(true);
+            quitButton.SetActive(true);
             isPaused = true;
         }
         else
@@ -35,6 +41,7 @@ public class PauseButton : MonoBehaviour
            
             Time.timeScale = 1;
             returnButton.SetActive(false);
+            quitButton.SetActive(false);
             isPaused = false;
         }
     }

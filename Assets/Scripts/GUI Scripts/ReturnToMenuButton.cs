@@ -20,6 +20,8 @@ public class ReturnToMenuButton : MonoBehaviour
 
     public void OnPress()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene("Menu");
+        
     }
 }

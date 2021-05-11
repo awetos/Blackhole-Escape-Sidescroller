@@ -20,7 +20,7 @@ public class StartGameButton : MonoBehaviour
 
     public void OnPress()
     {
-        Debug.Log("Loading scene");
+        
         SceneManager.LoadScene("Level1");
     }
 
